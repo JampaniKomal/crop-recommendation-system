@@ -65,6 +65,41 @@ jupyter notebook
 
 Run the notebooks in order (01 → 04) for full workflow.
 
-## Acknowledgement
+## Testing & Verification
 
-This project was developed with the assistance of Gemini, a large language model from Google, which contributed to dataset generation, workflow structuring, and documentation.
+Ran the full pipeline end to end (`01` → `04`, via `jupyter nbconvert
+--execute`) rather than just reading the notebooks. Confirmed:
+
+- Logistic Regression, Random Forest, and SVM all train and evaluate
+  correctly; SVM is selected as the best model (99.55% test accuracy)
+  and saved to `models/best_model_crop.pkl`.
+- Found and fixed a real gap in `04_results_visualization.ipynb`: the
+  "Feature Importance Analysis" plot only worked when the best model
+  happened to be a Random Forest (`if 'RandomForestClassifier' in
+  str(...)`) — since the actual best model is an SVM, running the
+  notebook as committed silently skipped the plot and printed a
+  fallback message instead, despite this being one of the README's
+  advertised Core Features. Fixed by switching to
+  `sklearn.inspection.permutation_importance`, which works for any
+  model type, and re-verified the plot now renders correctly regardless
+  of which model wins:
+
+  ![Confusion matrix](docs/confusion_matrix.png)
+  ![Feature importance](docs/feature_importance.png)
+
+## Known Limitations
+
+- **The near-perfect accuracy (99%+) reflects the synthetic dataset's
+  clean separability, not real-world difficulty.** Each crop's 7
+  features are drawn from independent Gaussian distributions centered
+  on fixed "ideal" values with small standard deviations, so classes
+  end up close to linearly separable. Real soil/weather sensor readings
+  would have far more noise and overlap between crops with similar
+  requirements — treat this as a proof-of-concept for the pipeline
+  shape, not a validated real-world accuracy figure.
+- No automated test suite — verification here was running the actual
+  notebooks end to end, not a committed `tests/` directory.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
