@@ -1,5 +1,9 @@
-pandas
-numpy
-scikit-learn
-matplotlib
-seaborn
+# Pinned for reproducible loading of the committed model (models/best_model_crop.pkl).
+# The scikit-learn pipeline (StandardScaler + SVC) was fitted with scikit-learn
+# 1.9.1; loading it under a different major raises version-mismatch warnings, so
+# the stack is pinned.
+numpy==2.1.3
+pandas==2.2.3
+scikit-learn==1.9.1
+matplotlib==3.9.2
+seaborn==0.13.2
